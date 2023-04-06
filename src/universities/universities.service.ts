@@ -42,4 +42,24 @@ export class UniversitiesService {
       );
     }
   }
+
+  async findOne(id: string): Promise<University> {
+    try {
+      const university = this.universityModel.findOne({ _id: id }).exec();
+
+      if (!university) {
+        throw new HttpException(
+          `University not found with id: ${id}.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return university;
+    } catch (error) {
+      throw new HttpException(
+        `Error while searching for university with id ${id}. Error: ${error}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
 }

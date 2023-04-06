@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { UniversitiesService } from './universities.service';
 import { University } from './university.schema';
 import { CreateUniversityDto } from './dto/create-university.dto';
@@ -16,8 +16,12 @@ export class UniversitiesController {
   }
 
   @Get()
-  @HttpCode(200)
   findAll(): Promise<University[]> {
     return this.universitiesService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<University> {
+    return this.universitiesService.findOne(id);
   }
 }
