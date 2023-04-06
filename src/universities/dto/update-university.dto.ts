@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUniversityDto {
   @ApiProperty()
-  state_province: string;
+  'state-province': string;
 
   @ApiProperty()
   web_pages: [string];
