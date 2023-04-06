@@ -4,6 +4,8 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User, UserSchema } from './user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth.guard';
 
 @Module({
   imports: [
@@ -14,7 +16,13 @@ import { MongooseModule } from '@nestjs/mongoose';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [UsersService],
+  providers: [
+    UsersService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
   controllers: [UsersController],
 })
 export class UsersModule {}
