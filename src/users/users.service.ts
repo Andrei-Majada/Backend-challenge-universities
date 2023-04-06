@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './user.schema';
@@ -30,6 +35,28 @@ export class UsersService {
       throw new HttpException(
         `Error while creating user. Error: ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async findOne(name: string, password: string): Promise<User> {
+    try {
+      const user = await this.userModel.findOne({ name }).exec();
+
+      if (!user) {
+        throw new HttpException(
+          `User not found with name: ${name}.`,
+          HttpStatus.NOT_FOUND,
+        );
+      } else if (password !== user.password) {
+        throw new UnauthorizedException();
+      }
+
+      return user;
+    } catch (error) {
+      throw new HttpException(
+        `Error while searching for user with name ${name}. Error: ${error}`,
+        HttpStatus.NOT_FOUND,
       );
     }
   }
