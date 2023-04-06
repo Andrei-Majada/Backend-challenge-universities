@@ -7,9 +7,12 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IAuth } from './interfaces/user.interfaces';
+
+const salt = 10;
 
 @Injectable()
 export class UsersService {
@@ -31,6 +34,9 @@ export class UsersService {
           HttpStatus.NOT_FOUND,
         );
       }
+
+      const hashPassword = await bcrypt.hash(createUserDto.password, salt);
+      createUserDto.password = hashPassword;
 
       const user = new this.userModel(createUserDto);
       return await user.save();
@@ -64,7 +70,9 @@ export class UsersService {
 
   async signIn({ username, pass }): Promise<IAuth> {
     const user = await this.userModel.findOne({ name: username }).exec();
-    if (user?.password !== pass) {
+
+    const isEqual = await bcrypt.compare(pass, user.password);
+    if (!isEqual) {
       throw new UnauthorizedException();
     }
 
