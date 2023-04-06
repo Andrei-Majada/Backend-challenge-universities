@@ -3,6 +3,7 @@ import { University, UniversityDocument } from './university.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUniversityDto } from './dto/create-university.dto';
+import { UpdateUniversityDto } from './dto/update-university.dto';
 
 @Injectable()
 export class UniversitiesService {
@@ -58,6 +59,35 @@ export class UniversitiesService {
     } catch (error) {
       throw new HttpException(
         `Error while searching for university with id ${id}. Error: ${error}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  async update(
+    id: string,
+    updateUniversityDto: UpdateUniversityDto,
+  ): Promise<University | undefined> {
+    try {
+      const university = await this.universityModel.findOneAndUpdate(
+        { _id: id },
+        updateUniversityDto,
+        {
+          new: true,
+        },
+      );
+
+      if (!university) {
+        throw new HttpException(
+          `University not found with id: ${id}.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return university;
+    } catch (error) {
+      throw new HttpException(
+        `Error while updating university with id: ${id}. Error: ${error}`,
         HttpStatus.NOT_FOUND,
       );
     }

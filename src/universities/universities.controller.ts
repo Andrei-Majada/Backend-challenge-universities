@@ -1,7 +1,16 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { UniversitiesService } from './universities.service';
 import { University } from './university.schema';
 import { CreateUniversityDto } from './dto/create-university.dto';
+import { UpdateUniversityDto } from './dto/update-university.dto';
 
 @Controller('/universities')
 export class UniversitiesController {
@@ -23,5 +32,13 @@ export class UniversitiesController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<University> {
     return this.universitiesService.findOne(id);
+  }
+
+  @Put(':id')
+  update(
+    @Param('id') id: string,
+    @Body() UupdateUniversityDto: UpdateUniversityDto,
+  ): Promise<University | undefined> {
+    return this.universitiesService.update(id, UupdateUniversityDto);
   }
 }
