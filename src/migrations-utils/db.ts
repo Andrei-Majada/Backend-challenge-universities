@@ -1,8 +1,8 @@
 import { MongoClient } from 'mongodb';
-
-const MONGOURI = 'mongodb://localhost:27017/challenge';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export const getDb = async () => {
-  const client: any = await MongoClient.connect(MONGOURI);
+  const client: any = await MongoClient.connect(process.env.MONGOURI);
   return client.db();
 };
