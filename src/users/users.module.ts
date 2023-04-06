@@ -4,14 +4,16 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User, UserSchema } from './user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.register({
       global: true,
-      secret: 'abracadabra',
-      signOptions: { expiresIn: '1d' },
+      secret: process.env.SECRET,
+      signOptions: { expiresIn: process.env.TOKEN_EXPIRATION_TIME },
     }),
   ],
   providers: [UsersService],
