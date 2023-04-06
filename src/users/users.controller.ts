@@ -1,9 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { User } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { IAuth } from './interfaces/user.interfaces';
+import { IAuth, ICreateUser } from './interfaces/user.interfaces';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Controller('users')
@@ -24,7 +23,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  create(@Body() createUserDto: CreateUserDto): Promise<ICreateUser> {
     return this.usersService.create(createUserDto);
   }
 }

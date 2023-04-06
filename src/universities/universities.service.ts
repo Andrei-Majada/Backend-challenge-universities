@@ -33,7 +33,7 @@ export class UniversitiesService {
       return await university.save();
     } catch (error) {
       throw new HttpException(
-        `Error while creating university. Error: ${error}`,
+        `Error while creating university. ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -69,7 +69,7 @@ export class UniversitiesService {
       };
     } catch (error) {
       throw new HttpException(
-        `Error while searching for universities. Error: ${error}`,
+        `Error while searching for universities. ${error}`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -89,7 +89,7 @@ export class UniversitiesService {
       return university;
     } catch (error) {
       throw new HttpException(
-        `Error while searching for university with id ${id}. Error: ${error}`,
+        `Error while searching for university with id ${id}. ${error}`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -118,7 +118,7 @@ export class UniversitiesService {
       return university;
     } catch (error) {
       throw new HttpException(
-        `Error while updating university with id: ${id}. Error: ${error}`,
+        `Error while updating university with id: ${id}. ${error}`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -138,7 +138,7 @@ export class UniversitiesService {
       return await this.universityModel.deleteOne({ _id: id });
     } catch (error) {
       throw new HttpException(
-        `Error while deleting university with id ${id}. Error: ${error}`,
+        `Error while deleting university with id ${id}. ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
