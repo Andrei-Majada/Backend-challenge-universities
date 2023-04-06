@@ -6,7 +6,7 @@ export type UniversityDocument = HydratedDocument<University>;
 @Schema({ timestamps: true })
 export class University {
   @Prop()
-  state_province: string;
+  'state-province': string;
 
   @Prop()
   web_pages: [string];
