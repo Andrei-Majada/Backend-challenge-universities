@@ -5,7 +5,7 @@ export class UpdateUniversityDto {
   'state-province': string;
 
   @ApiProperty()
-  web_pages: [string];
+  web_pages: string[];
 
   @ApiProperty()
   country: string;
@@ -17,5 +17,5 @@ export class UpdateUniversityDto {
   alpha_two_code: string;
 
   @ApiProperty()
-  domains: [string];
+  domains: string[];
 }

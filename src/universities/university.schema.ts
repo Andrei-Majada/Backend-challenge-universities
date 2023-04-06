@@ -9,7 +9,7 @@ export class University {
   'state-province': string;
 
   @Prop()
-  web_pages: [string];
+  web_pages: string[];
 
   @Prop({ required: true })
   country: string;
@@ -21,7 +21,7 @@ export class University {
   alpha_two_code: string;
 
   @Prop()
-  domains: [string];
+  domains: string[];
 }
 
 export const UniversitySchema = SchemaFactory.createForClass(University);
