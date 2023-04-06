@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { IAuth } from './interfaces/user.interfaces';
+import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Controller('users')
 export class UsersController {
@@ -13,6 +14,12 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   signIn(@Body() createAuthDto: CreateAuthDto): Promise<IAuth> {
     return this.usersService.signIn(createAuthDto);
+  }
+
+  @Post('/change/auth')
+  @HttpCode(HttpStatus.OK)
+  changePassword(@Body() updateAuthDto: UpdateAuthDto): Promise<void> {
+    return this.usersService.changePassword(updateAuthDto);
   }
 
   @Post()
