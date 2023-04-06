@@ -14,6 +14,20 @@ export class UniversitiesService {
 
   async create(createUniversityDto: CreateUniversityDto): Promise<University> {
     try {
+      const { country, name } = createUniversityDto;
+      const state_province = createUniversityDto['state-province'];
+
+      const findUniversity = await this.universityModel
+        .findOne({ 'state-province': state_province, country, name })
+        .exec();
+
+      if (findUniversity) {
+        throw new HttpException(
+          `University already exists in database.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
       const university = new this.universityModel(createUniversityDto);
       return await university.save();
     } catch (error) {
