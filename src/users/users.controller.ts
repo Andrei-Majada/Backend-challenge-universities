@@ -9,15 +9,15 @@ import { IAuth } from './interfaces/user.interfaces';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.create(createUserDto);
-  }
-
   @Post('/auth')
   @HttpCode(HttpStatus.OK)
   signIn(@Body() createAuthDto: CreateAuthDto): Promise<IAuth> {
     return this.usersService.signIn(createAuthDto);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return this.usersService.create(createUserDto);
   }
 }
