@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -40,5 +41,10 @@ export class UniversitiesController {
     @Body() UupdateUniversityDto: UpdateUniversityDto,
   ): Promise<University | undefined> {
     return this.universitiesService.update(id, UupdateUniversityDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.universitiesService.delete(id);
   }
 }

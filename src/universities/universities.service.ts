@@ -15,7 +15,7 @@ export class UniversitiesService {
   async create(createUniversityDto: CreateUniversityDto): Promise<University> {
     try {
       const university = new this.universityModel(createUniversityDto);
-      return university.save();
+      return await university.save();
     } catch (error) {
       throw new HttpException(
         `Error while creating university. Error: ${error}`,
@@ -26,7 +26,7 @@ export class UniversitiesService {
 
   async findAll(): Promise<University[]> {
     try {
-      const universities = this.universityModel.find().exec();
+      const universities = await this.universityModel.find().exec();
 
       if (!universities) {
         throw new HttpException(
@@ -46,7 +46,7 @@ export class UniversitiesService {
 
   async findOne(id: string): Promise<University> {
     try {
-      const university = this.universityModel.findOne({ _id: id }).exec();
+      const university = await this.universityModel.findOne({ _id: id }).exec();
 
       if (!university) {
         throw new HttpException(
@@ -89,6 +89,26 @@ export class UniversitiesService {
       throw new HttpException(
         `Error while updating university with id: ${id}. Error: ${error}`,
         HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  async delete(id: string) {
+    try {
+      const university = await this.universityModel.findOne({ _id: id });
+
+      if (!university) {
+        throw new HttpException(
+          `University not found with id: ${id}.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return await this.universityModel.deleteOne({ _id: id });
+    } catch (error) {
+      throw new HttpException(
+        `Error while deleting university with id ${id}. Error: ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
