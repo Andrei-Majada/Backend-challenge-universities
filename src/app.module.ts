@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 
-const MONGOURI = 'mongodb://localhost:27017/university';
+const MONGOURI = 'mongodb://localhost:27017/challenge';
 
 @Module({
   imports: [
