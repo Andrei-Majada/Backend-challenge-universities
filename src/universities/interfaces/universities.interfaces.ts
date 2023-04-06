@@ -1,6 +1,6 @@
 import { University } from '../university.schema';
 
-export interface UniversityPagination {
+export interface IUniversityPagination {
   universities: University[];
   totalPages: number;
   currentPage: number;

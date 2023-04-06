@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUniversityDto } from './dto/create-university.dto';
 import { UpdateUniversityDto } from './dto/update-university.dto';
-import { UniversityPagination } from './interfaces/universities.interfaces';
+import { IUniversityPagination } from './interfaces/universities.interfaces';
 
 @Injectable()
 export class UniversitiesService {
@@ -39,7 +39,7 @@ export class UniversitiesService {
     }
   }
 
-  async findAll(page: number, country: string): Promise<UniversityPagination> {
+  async findAll(page: number, country: string): Promise<IUniversityPagination> {
     try {
       const limit = 20;
 
