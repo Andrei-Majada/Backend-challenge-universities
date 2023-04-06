@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UniversitiesModule } from './universities/universities.module';
+import { UsersModule } from './users/users.module';
 
 const MONGO_URL = 'mongodb://localhost:27017/university';
 
@@ -14,6 +15,7 @@ const MONGO_URL = 'mongodb://localhost:27017/university';
       isGlobal: true,
     }),
     UniversitiesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateUniversityDto {
-  @ApiProperty()
-  web_pages: string[];
-
+export class CreateUserDto {
   @ApiProperty()
   name: string;
 
   @ApiProperty()
-  domains: string[];
+  email: string;
+
+  @ApiProperty()
+  password: string;
 }
