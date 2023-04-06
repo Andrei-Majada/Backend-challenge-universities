@@ -5,19 +5,31 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UniversitiesModule } from './universities/universities.module';
 import { UsersModule } from './users/users.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
-const MONGO_URL = 'mongodb://localhost:27017/university';
+const MONGOURI = 'mongodb://localhost:27017/university';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(MONGO_URL),
+    MongooseModule.forRoot(MONGOURI),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     UniversitiesModule,
     UsersModule,
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
