@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUniversityDto } from './dto/create-university.dto';
 import { UpdateUniversityDto } from './dto/update-university.dto';
+import { UniversityPagination } from './interfaces/universities.interfaces';
 
 @Injectable()
 export class UniversitiesService {
@@ -38,9 +39,17 @@ export class UniversitiesService {
     }
   }
 
-  async findAll(): Promise<University[]> {
+  async findAll(page: number, country: string): Promise<UniversityPagination> {
     try {
-      const universities = await this.universityModel.find().exec();
+      const limit = 20;
+
+      const universities = await this.universityModel
+        .find(country !== ':country' ? { country } : {})
+        .select({ _id: 1, country: 1, name: 1, 'state-province': 1 })
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .sort({ country: 1 })
+        .exec();
 
       if (!universities) {
         throw new HttpException(
@@ -49,7 +58,15 @@ export class UniversitiesService {
         );
       }
 
-      return universities;
+      const totalCount = await this.universityModel.count(
+        country !== ':country' ? { country } : {},
+      );
+
+      return {
+        universities,
+        totalPages: Math.ceil(totalCount / limit),
+        currentPage: Number(page),
+      };
     } catch (error) {
       throw new HttpException(
         `Error while searching for universities. Error: ${error}`,

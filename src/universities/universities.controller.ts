@@ -12,6 +12,7 @@ import { UniversitiesService } from './universities.service';
 import { University } from './university.schema';
 import { CreateUniversityDto } from './dto/create-university.dto';
 import { UpdateUniversityDto } from './dto/update-university.dto';
+import { UniversityPagination } from './interfaces/universities.interfaces';
 
 @Controller('/universities')
 export class UniversitiesController {
@@ -25,14 +26,17 @@ export class UniversitiesController {
     return this.universitiesService.create(createUniversityDto);
   }
 
-  @Get()
-  findAll(): Promise<University[]> {
-    return this.universitiesService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string): Promise<University> {
     return this.universitiesService.findOne(id);
+  }
+
+  @Get(':page/:country')
+  findAll(
+    @Param('page') page: number,
+    @Param('country') country?: string,
+  ): Promise<UniversityPagination> {
+    return this.universitiesService.findAll(page, country);
   }
 
   @Put(':id')
