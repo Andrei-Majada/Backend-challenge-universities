@@ -24,13 +24,13 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
-      const { name, email } = createUserDto;
+      const { email } = createUserDto;
 
-      const findUser = await this.userModel.findOne({ name, email }).exec();
+      const findUser = await this.userModel.findOne({ email }).exec();
 
       if (findUser) {
         throw new HttpException(
-          `User already exists in database.`,
+          `Email already exists in database.`,
           HttpStatus.NOT_FOUND,
         );
       }
