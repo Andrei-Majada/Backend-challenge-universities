@@ -7,12 +7,12 @@ import { UniversitiesModule } from './universities/universities.module';
 import { UsersModule } from './users/users.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-
-const MONGOURI = 'mongodb://localhost:27017/challenge';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
-    MongooseModule.forRoot(MONGOURI),
+    MongooseModule.forRoot(process.env.MONGOURI),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
