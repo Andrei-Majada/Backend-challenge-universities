@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpCode } from '@nestjs/common';
 import { UniversitiesService } from './universities.service';
+import { University } from './university.schema';
 
 @Controller('/universities')
 export class UniversitiesController {
   constructor(private readonly universitiesService: UniversitiesService) {}
 
   @Get()
-  getHello(): string {
-    return this.universitiesService.getHello();
+  @HttpCode(200)
+  findAll(): Promise<University[]> {
+    return this.universitiesService.findAll();
   }
 }
