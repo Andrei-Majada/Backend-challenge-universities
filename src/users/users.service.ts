@@ -10,9 +10,10 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
-import { IAuth } from './interfaces/user.interfaces';
+import { IAuth, ICreateUser } from './interfaces/user.interfaces';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CreateAuthDto } from './dto/create-auth.dto';
+import { isValidEmail } from './utils/emailValidation';
 
 const salt = 10;
 
@@ -24,9 +25,13 @@ export class UsersService {
     private jwtService: JwtService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<ICreateUser> {
     try {
       const { email } = createUserDto;
+
+      if (!isValidEmail(email)) {
+        throw new HttpException(`Invalid email format.`, HttpStatus.NOT_FOUND);
+      }
 
       const findUser = await this.userModel.findOne({ email }).exec();
 
@@ -41,10 +46,15 @@ export class UsersService {
       createUserDto.password = hashPassword;
 
       const user = new this.userModel(createUserDto);
-      return await user.save();
+      await user.save();
+      return {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      };
     } catch (error) {
       throw new HttpException(
-        `Error while creating user. Error: ${error}`,
+        `Error while creating user. ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -64,7 +74,7 @@ export class UsersService {
       return user;
     } catch (error) {
       throw new HttpException(
-        `Error while searching for user with email ${email}. Error: ${error}`,
+        `Error while searching for user with email ${email}. ${error}`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -103,7 +113,7 @@ export class UsersService {
       await user.save();
     } catch (error) {
       throw new HttpException(
-        `Error while searching for user with name ${name}. Error: ${error}`,
+        `Error while searching for user. ${error}`,
         HttpStatus.NOT_FOUND,
       );
     }
