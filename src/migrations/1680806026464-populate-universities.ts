@@ -26,7 +26,12 @@ export const up = async () => {
     if (universities) {
       universities.forEach(async (university) => {
         if (countrysList.includes(university.country)) {
-          universitiesList.push(university);
+          const newUniversityObject = {
+            ...university,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
+          universitiesList.push(newUniversityObject);
         }
       });
       await collection.insertMany(universitiesList);
