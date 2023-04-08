@@ -33,6 +33,8 @@
     "@nestjs/throttler": "^4.0.0",
     "axios": "^1.3.5",
     "bcrypt": "^5.1.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "migrate": "^1.8.0",
     "migrate-mongo": "^9.0.0",
     "mongoose": "^7.0.3",

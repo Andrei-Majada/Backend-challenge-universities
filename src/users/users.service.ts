@@ -13,9 +13,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { IAuth, ICreateUser } from './interfaces/user.interfaces';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { isValidEmail } from './utils/emailValidation';
-
-const salt = 10;
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class UsersService {
@@ -29,10 +28,6 @@ export class UsersService {
     try {
       const { email } = createUserDto;
 
-      if (!isValidEmail(email)) {
-        throw new HttpException(`Invalid email format.`, HttpStatus.NOT_FOUND);
-      }
-
       const findUser = await this.userModel.findOne({ email }).exec();
 
       if (findUser) {
@@ -42,7 +37,7 @@ export class UsersService {
         );
       }
 
-      const hashPassword = await bcrypt.hash(createUserDto.password, salt);
+      const hashPassword = await bcrypt.hash(createUserDto.password, 10);
       createUserDto.password = hashPassword;
 
       const user = new this.userModel(createUserDto);
@@ -81,10 +76,10 @@ export class UsersService {
   }
 
   async signIn(createAuthDto: CreateAuthDto): Promise<IAuth> {
-    const { email, pass } = createAuthDto;
+    const { email, password } = createAuthDto;
     const user = await this.userModel.findOne({ email }).exec();
 
-    const isEqual = await bcrypt.compare(pass, user.password);
+    const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       throw new UnauthorizedException();
     }
@@ -106,7 +101,7 @@ export class UsersService {
         );
       }
 
-      const hashPassword = await bcrypt.hash(newPassword, salt);
+      const hashPassword = await bcrypt.hash(newPassword, 10);
       findUser.password = hashPassword;
 
       const user = new this.userModel(findUser);
