@@ -1,9 +1,21 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { IAuth, ICreateUser } from './interfaces/user.interfaces';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import {
+  IAuth,
+  ICreateUser,
+  IRecoveryPass,
+} from './interfaces/user.interfaces';
+import { RecoveryAuthDto } from './dto/recovery-auth.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('users')
 export class UsersController {
@@ -15,10 +27,21 @@ export class UsersController {
     return this.usersService.signIn(createAuthDto);
   }
 
-  @Post('/change/auth')
+  @Post('/recovery')
   @HttpCode(HttpStatus.OK)
-  changePassword(@Body() updateAuthDto: UpdateAuthDto): Promise<void> {
-    return this.usersService.changePassword(updateAuthDto);
+  recoveryPassword(
+    @Body() recoveryAuthDto: RecoveryAuthDto,
+  ): Promise<IRecoveryPass> {
+    return this.usersService.recoveryPassword(recoveryAuthDto);
+  }
+
+  @Post('/recovery/:recoveryToken')
+  @HttpCode(HttpStatus.OK)
+  changePassword(
+    @Param('recoveryToken') recoveryToken: string,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ): Promise<string> {
+    return this.usersService.changePassword(recoveryToken, changePasswordDto);
   }
 
   @Post()
