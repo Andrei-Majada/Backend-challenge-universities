@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import * as dotenv from 'dotenv';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronjobsModule } from './cronjobs/cronjobs.module';
 dotenv.config();
 
 @Module({
@@ -22,6 +24,8 @@ dotenv.config();
       ttl: 60,
       limit: 10,
     }),
+    ScheduleModule.forRoot(),
+    CronjobsModule,
   ],
   controllers: [AppController],
   providers: [
