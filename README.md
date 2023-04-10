@@ -86,9 +86,9 @@ localhost:3000/docs
 ```
 
 ## hospedagem
-Caso prefira utilizar com um DNS público, existe uma instancia da API rodando em AWS EC2(Elastic Compute Cloud).
+Caso queira testar a aplicação em produção, a API está rodando em uma instancia t2.micro na AWS EC2(Elastic Compute Cloud).
 
-URL: ```ec2-18-228-3-94.sa-east-1.compute.amazonaws.com```
+URL: ```https://ec2-18-228-193-81.sa-east-1.compute.amazonaws.com:3000/docs```
 
 Foi utilizado o (PM2)[https://pm2.keymetrics.io/] para garantir o gerenciamento de acessos e disponibilidade da máquina em produção.
 
@@ -101,7 +101,9 @@ baseURL aqui é representado pelo localhost:3000 ou o DNS público do EC2.
 Criação de novas universidades.
 ##### create:
 **POST** /universities
+
 **Authorization**: Bearer token.
+
 **Body**:
  ```
  {
@@ -123,10 +125,14 @@ Criação de novas universidades.
 Busca pelas universidades disponíveis no banco, rota com paginação de 20 registros por pagina e filtro por país.
 
 **GET** /universities/:page/:country
+
 **Authorization**: Bearer token.
+
 **Params**:
+
 page: por conta da paginação da rota é necessário informar a pagina desejada.
-country: caso precise filtrar as universidades por país é possivel informa-lo aqui, caso queira todos basta não preencher o campo.
+
+country: caso precise filtrar as universidades por país é possível informa-lo aqui, caso queira basta informar a palavra **Any**.
 
 **responses:**
  ```
@@ -138,8 +144,11 @@ country: caso precise filtrar as universidades por país é possivel informa-lo 
 Busca por uma universidade pelo identificados da mesma.
 
 **GET** /universities/:id
+
 **Authorization**: Bearer token.
+
 **Params**:
+
 id: é o identificador de um registro de universidade no banco.
 
 **responses:**
@@ -152,9 +161,13 @@ id: é o identificador de um registro de universidade no banco.
 Atualização de um registro de universidade.
 
 **PUT** /universities/:id
+
 **Authorization**: Bearer token.
+
 **Params**:
+
 id: é o idv4 que identifica a universidade no banco.
+
 **Body**:
  ```
  {
@@ -173,8 +186,11 @@ id: é o idv4 que identifica a universidade no banco.
 Remoção de um registro de universidade.
 
 **Delete** /universities/:id
+
 **Authorization**: Bearer token.
+
 **Params**:
+
 id: é o idv4 que identifica a universidade no banco.
 
 **responses:**
@@ -187,7 +203,9 @@ id: é o idv4 que identifica a universidade no banco.
 #### Usuários:
 Criação de um novo usuário, o email precisa ser único.
 ##### create:
+
 **POST** /users
+
 **Body**:
  ```
 {
@@ -206,6 +224,7 @@ Criação de um novo usuário, o email precisa ser único.
 Login de um usuário com email e senha.
 
 **POST** /users/auth
+
 **Body**:
  ```
 {
@@ -223,6 +242,7 @@ Login de um usuário com email e senha.
 Recuperação de senha através do email, a rtoa retorna a URL que deve ser utilizada para alteração da senha.
 
 **POST** /users/recovery
+
 **Body**:
  ```
 {
@@ -236,7 +256,9 @@ Recuperação de senha através do email, a rtoa retorna a URL que deve ser util
 ```
 ----------------
 ##### change password:
+
 Utilizada para alteração de senha, recebida pela recuperação de senha, para alterar basta informar a nova senha e a confirmação de nova senha.
+
 *Não pode ser igual a senha anterior
 
 **POST** /users/recovery/:token
