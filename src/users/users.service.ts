@@ -10,10 +10,15 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
-import { IAuth, ICreateUser } from './interfaces/user.interfaces';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import {
+  IAuth,
+  ICreateUser,
+  IRecoveryPass,
+} from './interfaces/user.interfaces';
+import { RecoveryAuthDto } from './dto/recovery-auth.dto';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import * as dotenv from 'dotenv';
+import { ChangePasswordDto } from './dto/change-password.dto';
 dotenv.config();
 
 @Injectable()
@@ -89,9 +94,11 @@ export class UsersService {
     return { access_token: token };
   }
 
-  async changePassword(updateAuthDto: UpdateAuthDto): Promise<void> {
+  async recoveryPassword(
+    recoveryAuthDto: RecoveryAuthDto,
+  ): Promise<IRecoveryPass> {
     try {
-      const { email, newPassword } = updateAuthDto;
+      const { email } = recoveryAuthDto;
       const findUser = await this.userModel.findOne({ email }).exec();
 
       if (!findUser) {
@@ -101,11 +108,57 @@ export class UsersService {
         );
       }
 
+      const payload = {
+        email: findUser.email,
+        createdAt: Date.now(),
+      };
+      const token = await this.jwtService.signAsync(payload);
+      return {
+        recoveryUrl: `{{BASEURL}}/users/recovery/${token}`,
+      };
+    } catch (error) {}
+  }
+
+  async changePassword(
+    recoveryToken: string,
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<string> {
+    try {
+      const { newPassword, confirmNewPassword } = changePasswordDto;
+
+      const userInfo = await this.jwtService.verifyAsync(recoveryToken, {
+        secret: process.env.SECRET,
+      });
+
+      const { email } = userInfo;
+
+      const findUser = await this.userModel.findOne({ email }).exec();
+
+      if (!findUser) {
+        throw new HttpException(`User not found.`, HttpStatus.NOT_FOUND);
+      }
+
+      const isEqual = await bcrypt.compare(newPassword, findUser.password);
+      if (isEqual) {
+        throw new HttpException(
+          `New password cannot be equal to old password.`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      if (newPassword !== confirmNewPassword) {
+        throw new HttpException(
+          `Passwors don't match.`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
       const hashPassword = await bcrypt.hash(newPassword, 10);
       findUser.password = hashPassword;
 
       const user = new this.userModel(findUser);
       await user.save();
+      return 'Successfully changed password!';
     } catch (error) {
       throw new HttpException(
         `Error while searching for user. ${error}`,

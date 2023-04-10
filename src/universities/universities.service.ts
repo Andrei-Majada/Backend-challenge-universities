@@ -5,6 +5,8 @@ import { Model } from 'mongoose';
 import { CreateUniversityDto } from './dto/create-university.dto';
 import { UpdateUniversityDto } from './dto/update-university.dto';
 import { IUniversityPagination } from './interfaces/universities.interfaces';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class UniversitiesService {
@@ -41,13 +43,13 @@ export class UniversitiesService {
 
   async findAll(page: number, country: string): Promise<IUniversityPagination> {
     try {
-      const limit = 20;
+      const paginationLimit = parseInt(process.env.PAGINATION_LIMIT);
 
       const universities = await this.universityModel
-        .find(country !== ':country' ? { country } : {})
+        .find(country === 'Any' ? {} : { country })
         .select({ _id: 1, country: 1, name: 1, 'state-province': 1 })
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
+        .limit(paginationLimit * 1)
+        .skip((page - 1) * paginationLimit)
         .sort({ country: 1 })
         .exec();
 
@@ -59,12 +61,12 @@ export class UniversitiesService {
       }
 
       const totalCount = await this.universityModel.count(
-        country !== ':country' ? { country } : {},
+        country === 'Any' ? {} : { country },
       );
 
       return {
         universities,
-        totalPages: Math.ceil(totalCount / limit),
+        totalPages: Math.ceil(totalCount / paginationLimit),
         currentPage: Number(page),
       };
     } catch (error) {

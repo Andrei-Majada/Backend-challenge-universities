@@ -9,3 +9,7 @@ export interface ICreateUser {
   name: string;
   email: string;
 }
+
+export interface IRecoveryPass {
+  recoveryUrl: string;
+}
