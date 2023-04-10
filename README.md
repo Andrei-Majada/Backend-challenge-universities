@@ -25,8 +25,7 @@ Todas as senhas são criptografadas utilizado o hash de senha disponível na bib
 ### Limitador de acesso
 Todas as rotas possuem um limitador de taxa de requisições, permitindo 10 requisições do mesmo cliente durante 1 minuto, além disso o mesmo precisa aguardar o tempo de espera, a limitação de acesso as rotas ajuda a evitar ataques de negação de serviço por alta carga.
 ### Acesso do banco
-Nas variáveis de ambiente é possível alterar a origem do mongo, é possivel utilizar o
-(MongoAtlas)[https://www.mongodb.com/cloud/atlas/register] que é o atual configurado, mas também é possível utilizar o mongo disponibilizado pelo docker-compose, bastando remover o comentário da URI localhost e comentar a URI mongodb+srv.
+Nas variáveis de ambiente é possível alterar a origem do mongo, o atual configurado é o mongo disponibilizado pelo docker-compose, mas tambem poderia ser um [MongoAtlas](https://www.mongodb.com/cloud/atlas/register).
 
 ### População do banco
 A população do banco de dados é feito utilizando uma migration disponível na API.
@@ -92,7 +91,7 @@ Caso queira testar a aplicação em produção, a API está rodando em uma insta
 
 URL: ```http://ec2-34-227-222-176.compute-1.amazonaws.com/docs```
 
-Foi utilizado o (PM2)[https://pm2.keymetrics.io/] para garantir o gerenciamento de acessos e disponibilidade da máquina em produção.
+Foi utilizado o [PM2](https://pm2.keymetrics.io/) para garantir o gerenciamento de acessos e disponibilidade da máquina em produção.
 
 *Caso tenha problemas para acessar entre em contato comigo.
 
