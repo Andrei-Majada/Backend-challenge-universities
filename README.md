@@ -34,15 +34,6 @@ A população do banco de dados é feito utilizando uma migration disponível na
 ### Atualização das universidades
 A atualização da lista de universidade é diária, acontecendo todos os dias á meia noite.
 
-### Testes
-Os testes unitários e end-to-end foram desenvolvidos utilizando Jest e supertest, é possivel verifica-los com o comando:
-```
-npm run test
-```
-e para somente os end2end o comando:
-```
-npm run test:e2e
-```
 ### Documentação
 A documentação das rotas são autogeradas pelo Swagger, que é uma API pública de documentação.
 
@@ -58,25 +49,32 @@ git clone https://github.com/Andrei-Majada/Backend-challenge-universities.git
 
 No diretório de origem abra o terminal e execute **na ordem** a lista de comandos. 
 
+### Env
+Estas são as variaveis de ambiente que precisam ser criadas no arquivo .env 
+```bash
+PORT= ${port}
+MONGOURI='mongodb://localhost:27017/universitiesAPI'
+SECRET= ${secret}
+SALT_ROUNDS=10
+UNIVERSITIES_URL='http://universities.hipolabs.com/search?country='
+TOKEN_EXPIRATION_TIME='1d'
+```
+* caso prefira basta alterar o env.example para .env!
+
+```bash
+npm install
+```
 O banco de dados MongoDB foi containerizado para a aplicação, caso não tenha o Docker instalado é possível seguir o tutorial de instalação no [link](https://www.docker.com/).
 ```bash
 docker-compose up -d
 ```
-Para armazenar as URL's e informações sensíveis, estou utilizando o pacote dotenv e armazenando as variáveis no arquivo .env, como o arquivo esta listado no .gitignore é necessário alterar o nome do arquivo .env.example para .env.
-```bash
-npm install
-```
 Para popular o banco de dados que está sendo utilizado, utilizei a biblioteca migrate-mongo. Criei o script migrate:up que realiza uma requisição na rota de universidades, cria a collection e popula com as universidades dos países listados acima.
-```bash
-npm run migrate:down
-```
-Foi criado também o migrate:down que apaga todos os elementos da collection de universidades.
-Rodamos ele anteriormente para garantir que o banco estará limpo!
 ```bash
 npm run migrate:up
 ```
+e depois
 ```bash
-npm run start:dev
+npm run start
 ```
 Caso todos os comando obtenham êxito a API deve estar rodando e disponível na porta 3000.
 Como documentação da aplicação utilizei a biblioteca Swagger, com ela é possível simular requisições a todas as rotas contendo os parâmetros e *bodys* necessários.
@@ -84,15 +82,29 @@ Para acessar o Swagger acesse a rota:
 ```bash
 localhost:3000/docs
 ```
+Foi criado também o migrate:down que apaga todos os elementos da collection de universidades.
+```bash
+npm run migrate:down
+```
 
 ## hospedagem
-Caso queira testar a aplicação em produção, a API está rodando em uma instancia t2.micro na AWS EC2(Elastic Compute Cloud).
+Caso queira testar a aplicação em produção, a API está rodando em uma instancia t2.small na AWS EC2(Elastic Compute Cloud).
 
-URL: ```https://ec2-18-228-193-81.sa-east-1.compute.amazonaws.com:3000/docs```
+URL: ```http://ec2-34-227-222-176.compute-1.amazonaws.com/docs```
 
 Foi utilizado o (PM2)[https://pm2.keymetrics.io/] para garantir o gerenciamento de acessos e disponibilidade da máquina em produção.
 
 *Caso tenha problemas para acessar entre em contato comigo.
+
+### Testes
+Os testes unitários e end-to-end foram desenvolvidos utilizando Jest e supertest, é possivel verifica-los com o comando:
+```
+npm run test
+```
+e para somente os end2end o comando:
+```
+npm run test:e2e
+```
 
 ## Rotas
 baseURL aqui é representado pelo localhost:3000 ou o DNS público do EC2.
