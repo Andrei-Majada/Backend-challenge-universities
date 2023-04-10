@@ -15,6 +15,7 @@ async function bootstrap() {
     .setTitle('Backend challenge universities')
     .setDescription('made for a challenge')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
